@@ -1,3 +1,3 @@
-module main
+module mysolution
 
 go 1.18
