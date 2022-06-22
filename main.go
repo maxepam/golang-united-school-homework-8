@@ -1,4 +1,4 @@
-package homework8
+package main
 
 import (
 	"encoding/json"
@@ -8,6 +8,9 @@ import (
 	"os"
 	"strings"
 )
+
+const errorReadJSON = "Json doesn't have json object. Error is %w"
+const errorWriteJSON = "Cannot make JSON string from object. Error is %w"
 
 type Arguments map[string]string
 
@@ -85,7 +88,7 @@ func addItem(fileName string, item string, writer io.Writer) error {
 	var items []Item
 	err = json.Unmarshal(fileContent, &items)
 	if err != nil && len(fileContent) > 0 {
-		return fmt.Errorf("Json file doesn't have json object. Error is %w", err)
+		return fmt.Errorf(errorReadJSON, err)
 	}
 	
 	foundId := findIdOfElement(items, newItem.Id)
@@ -98,7 +101,7 @@ func addItem(fileName string, item string, writer io.Writer) error {
 	
 	newFileContent, err := json.Marshal(items)
 	if err != nil {
-		return fmt.Errorf("Cannot Marshal new object with json string. Error is %w", err)
+		return fmt.Errorf(errorWriteJSON, err)
 	}
 	ioutil.WriteFile(fileName, newFileContent, 0755)
 
@@ -115,7 +118,7 @@ func removeItem(fileName string, id string, writer io.Writer) error {
 	var items []Item
 	err = json.Unmarshal(fileContent, &items)
 	if err != nil && len(fileContent) > 0 {
-		return fmt.Errorf("Json file doesn't have json object. Error is %w", err)
+		return fmt.Errorf(errorReadJSON, err)
 	}
 	
 	foundId := findIdOfElement(items, id)
@@ -129,7 +132,7 @@ func removeItem(fileName string, id string, writer io.Writer) error {
 	
 	newFileContent, err := json.Marshal(newItems)
 	if err != nil {
-		return fmt.Errorf("Cannot Marshal new object with json string. Error is %w", err)
+		return fmt.Errorf(errorWriteJSON, err)
 	}
 	ioutil.WriteFile(fileName, newFileContent, 0755)
 
@@ -146,7 +149,7 @@ func findItem(fileName string, id string, writer io.Writer) error {
 	var items []Item
 	err = json.Unmarshal(fileContent, &items)
 	if err != nil && len(fileContent) > 0 {
-		return fmt.Errorf("Json file doesn't have json object. Error is %w", err)
+		return fmt.Errorf(errorReadJSON, err)
 	}
 	
 	foundId := findIdOfElement(items, id)
@@ -157,7 +160,7 @@ func findItem(fileName string, id string, writer io.Writer) error {
 	
 	newItemByte, err := json.Marshal(items[foundId])
 	if err != nil {
-		return fmt.Errorf("Cannot Marshal new object with json string. Error is %w", err)
+		return fmt.Errorf(errorWriteJSON, err)
 	}
 	writer.Write(newItemByte)
 

@@ -1,4 +1,4 @@
-package homework8
+package main
 
 import (
 	"bytes"
